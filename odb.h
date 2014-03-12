@@ -1,6 +1,6 @@
 #ifndef _ODB_H_
 #define _ODB_H_
-#include "hash/hash.h"
+#include "hash.h"
 struct blob {
 	sha1key bid;
 };
