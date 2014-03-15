@@ -39,7 +39,7 @@ struct object_list {
 };
 
 int parse_path(unsigned char *path);
-int creat_object_list(unsigned char *dir, struct object_list **p);
+struct object_list **creat_object_list(unsigned char *dir, struct object_list **p);
 struct object_list *init_object_list(void);
 int creat_commit(unsigned char *dir, struct object_list *pol);
 struct object *init_commit(unsigned char *name);

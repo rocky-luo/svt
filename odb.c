@@ -15,12 +15,12 @@ int parse_path(unsigned char *path)
 		return -1;
 	}
 	*/
-	temp = add_commit2list("first", &list_entry);
+	temp = add_commit2list("commit this", &list_entry);
 	creat_object_list(path, temp); 
 	return 0;
 }
 
-int creat_object_list(unsigned char *dir, struct object_list **p)
+struct object_list ** creat_object_list(unsigned char *dir, struct object_list **p)
 {
 	DIR *dp;
 	struct dirent *entry;
@@ -29,7 +29,7 @@ int creat_object_list(unsigned char *dir, struct object_list **p)
 	struct object_list **temp;
 	if ((dp = opendir(dir)) == NULL) {
 		fprintf(stderr, "cannot open dir:%s\n", dir);
-		return -1;	
+		return NULL;	
 	}
 	temp = add_tree2list(dir, p);
 	chdir(dir);
@@ -39,12 +39,12 @@ int creat_object_list(unsigned char *dir, struct object_list **p)
 			if (strcmp(".", entry->d_name) ==0 ||
 				strcmp( "..", entry->d_name) ==0)
 				continue;
-			creat_object_list(entry->d_name, temp); 
+			temp = creat_object_list(entry->d_name, temp); 
 		}
 		else temp = add_blob2list(entry->d_name, temp);
 	}
 	chdir("..");
-	return 0;
+	return &((*p)->rbrother);
 }
 
 struct object_list *init_object_list(void)
