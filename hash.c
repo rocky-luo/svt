@@ -309,7 +309,7 @@ int svt_sha1sum(char *filename, unsigned char *sha1sum)
 	int i;
 	fp = fopen(filename, "rb");
 	if(!fp){
-		fprintf(stderr, "can't open '%s': %s\n", *filename, strerror(errno));
+		fprintf(stderr, "can't open '%s': %s\n", filename, strerror(errno));
 		return -1;
 	}
 	sha1_init(&ctx);
