@@ -1,5 +1,8 @@
 #ifndef _ODB_H_
 #define _ODB_H_
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <stdlib.h>
 #include "hash.h"
 #include <dirent.h>
 #include <sys/stat.h>
@@ -48,5 +51,7 @@ struct object *init_blob(unsigned char *name);
 struct object_list **add_commit2list(unsigned char *name, struct object_list **entry);
 struct object_list **add_tree2list(unsigned char *name, struct object_list **p);
 struct object_list **add_blob2list(unsigned char *name, struct object_list **p);
+int store_blob(struct object *obj);
+int svt_cp(unsigned char *src, unsigned char *dest);
 	
 #endif

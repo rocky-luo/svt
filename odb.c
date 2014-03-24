@@ -1,10 +1,17 @@
 #include "odb.h"
+unsigned char ROOTPATH[100] = "\0";
+unsigned char OBJECTSPATH[100] = "\0";
 
 int parse_path(unsigned char *path) 
 {
 	struct object_list *list_entry;
 	struct object_list **temp;
-	
+	getcwd(ROOTPATH, 100);
+	strcat(ROOTPATH, "/");
+	strcat(ROOTPATH, path);
+ 	strcat(OBJECTSPATH,ROOTPATH);
+	strcat(OBJECTSPATH,"/objects");
+	svt_mkdir(OBJECTSPATH);
 	/*
 	if (lstat(path, &s) < 0) {
 		printf("lstat error\n");
@@ -27,6 +34,8 @@ struct object_list ** creat_object_list(unsigned char *dir, struct object_list *
 	struct stat statbuf;
 	//struct object *o;
 	struct object_list **temp;
+	struct object *tree;
+	struct object *blob;
 	if ((dp = opendir(dir)) == NULL) {
 		fprintf(stderr, "cannot open dir:%s\n", dir);
 		return NULL;	
@@ -41,7 +50,10 @@ struct object_list ** creat_object_list(unsigned char *dir, struct object_list *
 				continue;
 			temp = creat_object_list(entry->d_name, temp); 
 		}
-		else temp = add_blob2list(entry->d_name, temp);
+		else {
+			temp = add_blob2list(entry->d_name, temp);
+			
+		}
 	}
 	chdir("..");
 	return &((*p)->rbrother);
@@ -127,5 +139,29 @@ struct object_list **add_blob2list(unsigned char *name, struct object_list **p)
 	*p = init_object_list();
 	(*p)->item = init_blob(name);
 	a= &((*p)->rbrother);
+	store_blob((*p)->item); 
 	return a;
+}
+
+int store_blob(struct object *obj)
+{
+	if (0 != svt_sha1sum(obj->name, obj->oid.key))
+		fprintf(stderr, "svt_sha1sum in store_blob erro\n");
+	unsigned char store[200] = "\0";
+	strcat(store, OBJECTSPATH);
+	strcat(store, obj->oid.key);
+	svt_cp(obj->name, store);
+	return 0;
+}
+
+int svt_cp(unsigned char *src, unsigned char *dest)
+{
+	unsigned char block[4096];
+	int in, out;
+	int nread;
+	in = open(src, O_RDONLY);
+	out = open(dest, O_WRONLY|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR);
+	while ((nread = read(in, block, sizeof(block))) > 0)
+		write(out, block, nread);
+	return 0;
 }
