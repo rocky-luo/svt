@@ -10,7 +10,7 @@ int parse_path(unsigned char *path)
 	strcat(ROOTPATH, "/");
 	strcat(ROOTPATH, path);
  	strcat(OBJECTSPATH,ROOTPATH);
-	strcat(OBJECTSPATH,"/objects");
+	strcat(OBJECTSPATH,"/objects/");
 	svt_mkdir(OBJECTSPATH);
 	/*
 	if (lstat(path, &s) < 0) {
@@ -56,6 +56,7 @@ struct object_list **creat_object_list(unsigned char *dir, struct object_list **
 			
 		}
 	}
+	store_tree((*p)->item);	
 	chdir("..");
 	return &((*p)->rbrother);
 }
@@ -152,7 +153,6 @@ int store_blob(struct object *obj)
 	
 	unsigned char store[400] = "\0";
 	strcat(store, OBJECTSPATH);
-	strcat(store,"/");
 	strcat(store, obj->oid.strkey);
 	svt_cp(obj->name, store);
 	return 0;
@@ -169,4 +169,42 @@ int svt_cp(unsigned char *src, unsigned char *dest)
 		nwrite = write(out, block, nread);
 	
 	return 0;
+}
+
+int store_tree(struct object_list *tree)
+{
+	unsigned char path[400] = "\0";
+	unsigned char realpath[400] = "\0";
+	strcat(path, OBJECTSPATH);
+	strcat(path, "temp_treetohash");
+	struct object_list *u = tree->child;
+	int treefile;
+	unsigned int nname;
+	treefile = open(path, O_WRONLY|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR);
+	for(u = tree->child; u != NULL; u = u->lbrther) {
+		if (HASHLEN != write(treefile, u->item->oid.strkey, HASHLEN))
+			fprintf(stderr, "write erro in store_tree\n");
+		if (u->item->type == BLOB)
+			if (write(treefile, "blob", 4) != 4)
+				fprintf(stderr, "write erro in store_tree\n");
+		if (u->item->type == TREE)
+			if (write(treefile, "tree", 4) != 4)
+				fprintf(stderr, "write erro in store_tree\n");
+		/*TODO COMMIT*/
+		nname = strlen(&(u->item->name));
+		if (nname != write(treefile, u->item->name, nname))
+			fprintf(stderr, "write erro in store_tree\n");
+		if (1 != write(treefile, "\n", 1))
+			fprintf(stderr, "write erro in store_tree\n");
+	}
+	if (1 != write(treefile, "\0", 1))
+		fprintf(stderr, "write erro in store_tree\n");
+	if (0 != svt_sha1sum(path, tree->item->oid.key))
+		fprintf(stderr, "svt_sha1sum in store_tree erro\n");
+	key2str(tree->item->oid.key, tree->item->oid.strkey);
+	strcat(realpath, OBJECTSPATH);
+	strcat(realpath, tree-item-oid.strkey);
+	rename(path, realpath);
+	return 0;
+	
 }
