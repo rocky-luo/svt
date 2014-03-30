@@ -16,11 +16,12 @@ typedef struct {
  } SHA1_CONTEXT;
 typedef struct {
 	unsigned char key[20];
+	unsigned char strkey[41];
 } sha1key;
 void transform(SHA1_CONTEXT *hd, unsigned char *data);
 void sha1_write(SHA1_CONTEXT *hd, unsigned char *inbuf, size_t inlen);
 void sha1_final(SHA1_CONTEXT *hd);
 int svt_sha1sum(char *filename, unsigned char *sha1sum);
 void sha1_init(SHA1_CONTEXT *hd);
-
+int key2str(unsigned char *in, unsigned char *out);
 #endif

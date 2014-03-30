@@ -27,7 +27,7 @@ int parse_path(unsigned char *path)
 	return 0;
 }
 
-struct object_list ** creat_object_list(unsigned char *dir, struct object_list **p)
+struct object_list **creat_object_list(unsigned char *dir, struct object_list **p)
 {
 	DIR *dp;
 	struct dirent *entry;
@@ -46,7 +46,8 @@ struct object_list ** creat_object_list(unsigned char *dir, struct object_list *
 		lstat(entry->d_name, &statbuf);
 		if (S_ISDIR(statbuf.st_mode)) {
 			if (strcmp(".", entry->d_name) ==0 ||
-				strcmp( "..", entry->d_name) ==0)
+				strcmp( "..", entry->d_name) ==0 ||
+					strcmp( "objects", entry->d_name) ==0)
 				continue;
 			temp = creat_object_list(entry->d_name, temp); 
 		}
@@ -147,9 +148,12 @@ int store_blob(struct object *obj)
 {
 	if (0 != svt_sha1sum(obj->name, obj->oid.key))
 		fprintf(stderr, "svt_sha1sum in store_blob erro\n");
-	unsigned char store[200] = "\0";
+	key2str(obj->oid.key, obj->oid.strkey);
+	
+	unsigned char store[400] = "\0";
 	strcat(store, OBJECTSPATH);
-	strcat(store, obj->oid.key);
+	strcat(store,"/");
+	strcat(store, obj->oid.strkey);
 	svt_cp(obj->name, store);
 	return 0;
 }
@@ -158,10 +162,11 @@ int svt_cp(unsigned char *src, unsigned char *dest)
 {
 	unsigned char block[4096];
 	int in, out;
-	int nread;
+	int nread, nwrite;
 	in = open(src, O_RDONLY);
 	out = open(dest, O_WRONLY|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR);
 	while ((nread = read(in, block, sizeof(block))) > 0)
-		write(out, block, nread);
+		nwrite = write(out, block, nread);
+	
 	return 0;
 }

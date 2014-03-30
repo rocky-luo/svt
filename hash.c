@@ -324,3 +324,15 @@ int svt_sha1sum(char *filename, unsigned char *sha1sum)
 	
 }
 
+int key2str(unsigned char *in, unsigned char *out)
+{
+	int i;
+	for (i=0; i<20; i++) { 
+		sprintf(&out[2*i], "%x", in[i]);
+		if (out[2*i+1] == '\0') {
+			out[2*i+1] = out[2*i];
+			out[2*i] = '0';
+		}
+	}
+	return 0;
+}
