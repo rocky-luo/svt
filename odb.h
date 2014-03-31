@@ -53,5 +53,6 @@ struct object_list **add_tree2list(unsigned char *name, struct object_list **p);
 struct object_list **add_blob2list(unsigned char *name, struct object_list **p);
 int store_blob(struct object *obj);
 int svt_cp(unsigned char *src, unsigned char *dest);
+int store_tree(struct object_list *tree);
 	
 #endif

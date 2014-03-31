@@ -7,6 +7,8 @@
 #include <assert.h>
 #include <errno.h>
 
+#define SHA1STRLEN 40 
+
 typedef unsigned int u32;
 typedef struct {
         u32  h0,h1,h2,h3,h4;
@@ -16,7 +18,7 @@ typedef struct {
  } SHA1_CONTEXT;
 typedef struct {
 	unsigned char key[20];
-	unsigned char strkey[41];
+	unsigned char strkey[SHA1STRLEN+1];
 } sha1key;
 void transform(SHA1_CONTEXT *hd, unsigned char *data);
 void sha1_write(SHA1_CONTEXT *hd, unsigned char *inbuf, size_t inlen);
