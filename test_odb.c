@@ -1,7 +1,11 @@
 #include "test_odb.h"
 
-int main(void) {
-	if (!parse_path("nginx-1.0.15"))
+int main(int argc, char **argv) {
+	if (argc != 2) {
+		printf("miss a argc\n");
+		return 0;
+	}
+	if (!parse_path(argv[1]))
 		printf("i can make it\n");
 	return 0;
 }
