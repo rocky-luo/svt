@@ -198,11 +198,13 @@ int store_tree(struct object_list *tree)
 		if (1 != write(treefile, "\n", 1))
 			fprintf(stderr, "write erro in store_tree\n");
 	}
+/*
 	if (1 != write(treefile, "\0", 1))
 		fprintf(stderr, "write erro in store_tree\n");
+*/
+	close(treefile);
 	if (0 != svt_sha1sum(path, tree->item->oid.key))
 		fprintf(stderr, "svt_sha1sum in store_tree erro\n");
-	close(treefile);
 	key2str(tree->item->oid.key, tree->item->oid.strkey);
 	strcat(realpath, OBJECTSPATH);
 	strcat(realpath, tree->item->oid.strkey);

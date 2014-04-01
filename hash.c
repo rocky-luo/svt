@@ -334,6 +334,6 @@ int key2str(unsigned char *in, unsigned char *out)
 			out[2*i] = '0';
 		}
 	}
-	out[41] = '\0';
+	out[40] = '\0';
 	return 0;
 }

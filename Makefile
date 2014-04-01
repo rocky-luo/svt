@@ -15,3 +15,5 @@ test_hash: test_hash.c hash.c hash.h
 	$(CC) -o test_hash $(CFLAGS) test_hash.c hash.c
 clean:
 	rm $(object) test_odb 
+clear:
+	rm -rf nginx*/objects etc/objects frist/objects
