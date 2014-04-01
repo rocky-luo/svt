@@ -1,0 +1,8 @@
+*.*.swp
+etc/
+nginx-*
+frist/
+tags
+test_hash
+test_odb
+*.o
