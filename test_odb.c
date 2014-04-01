@@ -1,4 +1,5 @@
-#include "test_odb.h"
+#include "common.h"
+#include "odb.h"
 
 int main(int argc, char **argv) {
 	if (argc != 2) {

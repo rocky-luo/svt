@@ -1,3 +1,4 @@
+#include "common.h"
 #include "initdir.h"
 
 int svt_mkdir(char *path)

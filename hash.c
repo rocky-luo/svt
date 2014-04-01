@@ -21,6 +21,7 @@
 
    Note, that this is a simple tool to be used for MS Windows.
 */
+#include "common.h"
 #include "hash.h"
 
 #undef BIG_ENDIAN_HOST

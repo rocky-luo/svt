@@ -1,13 +1,7 @@
-#ifndef _ODB_H_
-#define _ODB_H_
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdlib.h>
+#ifndef _ODB_H__
+#define _ODB_H__
+
 #include "hash.h"
-#include <dirent.h>
-#include <sys/stat.h>
-#include <string.h>
-#include <malloc.h>
 
 struct blob {
 	unsigned char name[50];

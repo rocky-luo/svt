@@ -1,19 +1,24 @@
-CFLAGS = -g -O0 
-object = odb.o hash.o
-CC = gcc 
+CFLAGS = -g -O0 -Wall
+object = odb.o hash.o initdir.o test_odb.o test_hash.o
+target = test_odb test_hash
+CC = gcc
 
-all:$(object)
 
-
-odb.o: odb.c odb.h
+odb.o: odb.c odb.h common.h
 	$(CC) -c odb.c
-hash.o: hash.c hash.h
+hash.o: hash.c hash.h common.h
 	$(CC) -c hash.c
-test_odb: test_odb.c test_odb.h odb.c odb.h initdir.c initdir.h hash.c hash.h
-	$(CC) -o test_odb $(CFLAGS) test_odb.c odb.c initdir.c hash.c
-test_hash: test_hash.c hash.c hash.h
-	$(CC) -o test_hash $(CFLAGS) test_hash.c hash.c
+initdir.o: initdir.c initdir.h common.h
+	$(CC) -c initdir.c
+test_odb.o: test_odb.c
+	$(CC) -c test_odb.c
+test_hash.o: test_hash.c
+	$(CC) -c test_hash.c
+test_odb: test_odb.o initdir.o hash.o odb.o
+	$(CC) -o $@ $(CFLAGS) test_odb.o initdir.o hash.o odb.o
+test_hash: test_hash.o hash.o
+	$(CC) -o $@ $(CFLAGS) test_hash.o hash.o
 clean:
-	rm $(object) test_odb 
+	-rm -f $(object) $(target) 
 clear:
-	rm -rf nginx*/objects etc/objects frist/objects
+	-rm -rf nginx*/objects etc/objects frist/objects

@@ -1,4 +1,6 @@
+#include "common.h"
 #include "odb.h"
+
 unsigned char ROOTPATH[100] = "\0";
 unsigned char OBJECTSPATH[100] = "\0";
 

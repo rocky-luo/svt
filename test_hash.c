@@ -1,3 +1,4 @@
+#include "common.h"
 #include "hash.h"
 
 int main(void)

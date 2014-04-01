@@ -1,11 +1,7 @@
-#ifndef _hash_h__
-#define _hash_h__
+#ifndef _HASH_H__
+#define _HASH_H__
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
-#include <errno.h>
+#include "common.h"
 
 #define SHA1STRLEN 40 
 
