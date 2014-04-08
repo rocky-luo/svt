@@ -19,6 +19,6 @@ test_odb: test_odb.o initdir.o hash.o odb.o
 test_hash: test_hash.o hash.o
 	$(CC) -o $@ $(CFLAGS) test_hash.o hash.o
 clean:
-	-rm -f $(object) $(target) 
+	-rm -rf $(object) $(target) nginx*/objects etc/objects frist/objects 
 clear:
 	-rm -rf nginx*/objects etc/objects frist/objects
