@@ -3,50 +3,61 @@
 
 #include "hash.h"
 
-struct blob {
-	unsigned char name[50];
+typedef struct blob_s  blob_t;
+struct blob_s {
+	uint8_t name[50];
 	sha1key bid;
 };
-struct tree {
-	unsigned char name[50];
+
+typedef struct tree_s  tree_t;
+struct tree_s {
+	uint8_t name[50];
 	sha1key tid;
 };
-struct commitinfo {
-	char *date;
-	char *author;
+
+typedef struct commitinfo_s  commitinfo_t;
+struct commitinfo_s {
+	int8_t *date;
+	int8_t *author;
 };
-struct commit {
+
+typedef struct commit_s  commit_t;
+struct commit_s {
 	sha1key cid;
-	struct commitinfo inf;
-	struct commit *parent;
-	struct commit *child;
+	commitinfo_t info;
+	commit_t *parent;
+	commit_t *child;
 };
 
 enum otype {TREE, BLOB, COMMIT};
-struct object {
+
+typedef struct object_s  object_t;
+struct object_s {
 	enum otype type;
 	sha1key oid;
-	unsigned char name[50];
+	uint8_t name[50];
 	void *real;
 };
-struct object_list {
-	struct object *item;
-	struct object_list *rbrother;
-	struct object_list *child;
+
+typedef struct object_list_s  object_list_t;
+struct object_list_s {
+	object_t *item;
+	object_list_t *rbrother;
+	object_list_t *child;
 };
 
-int parse_path(unsigned char *path);
-struct object_list **creat_object_list(unsigned char *dir, struct object_list **p);
-struct object_list *init_object_list(void);
-int creat_commit(unsigned char *dir, struct object_list *pol);
-struct object *init_commit(unsigned char *name);
-struct object *init_tree(unsigned char *name);
-struct object *init_blob(unsigned char *name);
-struct object_list **add_commit2list(unsigned char *name, struct object_list **entry);
-struct object_list **add_tree2list(unsigned char *name, struct object_list **p);
-struct object_list **add_blob2list(unsigned char *name, struct object_list **p);
-int store_blob(struct object *obj);
-int svt_cp(unsigned char *src, unsigned char *dest);
-int store_tree(struct object_list *tree);
+int32_t parse_path(uint8_t *path);
+object_list_t **creat_object_list(uint8_t *dir, object_list_t **p);
+object_list_t *init_object_list(void);
+int32_t creat_commit(uint8_t *dir, object_list_t *pol);
+object_t *init_commit(uint8_t *name);
+object_t *init_tree(uint8_t *name);
+object_t *init_blob(uint8_t *name);
+object_list_t **add_commit2list(uint8_t *name, object_list_t **entry);
+object_list_t **add_tree2list(uint8_t *name, object_list_t **p);
+object_list_t **add_blob2list(uint8_t *name, object_list_t **p);
+int32_t store_blob(object_t *obj);
+int32_t svt_cp(uint8_t *src, uint8_t *dest);
+int32_t store_tree(object_list_t *tree);
 	
 #endif

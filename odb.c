@@ -1,13 +1,13 @@
 #include "common.h"
 #include "odb.h"
 
-unsigned char ROOTPATH[100] = "\0";
-unsigned char OBJECTSPATH[100] = "\0";
+uint8_t ROOTPATH[100] = "\0";
+uint8_t OBJECTSPATH[100] = "\0";
 
-int parse_path(unsigned char *path) 
+int32_t parse_path(uint8_t *path) 
 {
-	struct object_list *list_entry;
-	struct object_list **temp;
+	object_list_t *list_entry;
+	object_list_t **temp;
 	getcwd(ROOTPATH, 100);
 	strcat(ROOTPATH, "/");
 	strcat(ROOTPATH, path);
@@ -29,15 +29,15 @@ int parse_path(unsigned char *path)
 	return 0;
 }
 
-struct object_list **creat_object_list(unsigned char *dir, struct object_list **p)
+object_list_t **creat_object_list(uint8_t *dir, object_list_t **p)
 {
 	DIR *dp;
 	struct dirent *entry;
 	struct stat statbuf;
-	//struct object *o;
-	struct object_list **temp;
-	struct object *tree;
-	struct object *blob;
+	//object_t *o;
+	object_list_t **temp;
+	object_t *tree;
+	object_t *blob;
 	if ((dp = opendir(dir)) == NULL) {
 		fprintf(stderr, "cannot open dir:%s\n", dir);
 		return NULL;	
@@ -63,10 +63,10 @@ struct object_list **creat_object_list(unsigned char *dir, struct object_list **
 	return &((*p)->rbrother);
 }
 
-struct object_list *init_object_list(void)
+object_list_t *init_object_list(void)
 {
-	struct object_list *pol;
-	if ((pol = malloc(sizeof(struct object_list))) == NULL) {
+	object_list_t *pol;
+	if ((pol = malloc(sizeof(object_list_t))) == NULL) {
 		printf("init_object_list fail\n");
 		return NULL;
 	}	
@@ -76,7 +76,7 @@ struct object_list *init_object_list(void)
 	return pol;
 }
 
-int creat_commit(unsigned char *dir, struct object_list *pol)
+int32_t creat_commit(uint8_t *dir, object_list_t *pol)
 {
 	
 	pol->item = init_commit(dir);
@@ -85,10 +85,10 @@ int creat_commit(unsigned char *dir, struct object_list *pol)
 	return 0;
 }
 
-struct object *init_commit(unsigned char *name)
+object_t *init_commit(uint8_t *name)
 {
-	struct object *pc;
-	if ((pc = malloc(sizeof(struct object))) == NULL) {
+	object_t *pc;
+	if ((pc = malloc(sizeof(object_t))) == NULL) {
 		printf("init_commit fail!");
 		return NULL;
 	}
@@ -97,10 +97,10 @@ struct object *init_commit(unsigned char *name)
 	return pc;
 }
 
-struct object *init_tree(unsigned char *name)
+object_t *init_tree(uint8_t *name)
 {
-	struct object *pc;
-	if ((pc = malloc(sizeof(struct object))) == NULL) {
+	object_t *pc;
+	if ((pc = malloc(sizeof(object_t))) == NULL) {
 		printf("init_blob fail!");
 		return NULL;
 	}
@@ -109,10 +109,10 @@ struct object *init_tree(unsigned char *name)
 	return pc;
 }
 
-struct object *init_blob(unsigned char *name)
+object_t *init_blob(uint8_t *name)
 {
-	struct object *pc;
-	if ((pc = malloc(sizeof(struct object))) == NULL) {
+	object_t *pc;
+	if ((pc = malloc(sizeof(object_t))) == NULL) {
 		printf("init_blob fail!");
 		return NULL;
 	}
@@ -121,15 +121,15 @@ struct object *init_blob(unsigned char *name)
 	return pc;
 }
 
-struct object_list **add_commit2list(unsigned char *name, struct object_list **entry)
+object_list_t **add_commit2list(uint8_t *name, object_list_t **entry)
 {
 	*entry = init_object_list();
 	(*entry)->item = init_commit(name);
 	return &((*entry)->child);
 }
-struct object_list **add_tree2list(unsigned char *name, struct object_list **p)
+object_list_t **add_tree2list(uint8_t *name, object_list_t **p)
 {
-	struct object_list **a;
+	object_list_t **a;
 	*p = init_object_list();
 	(*p)->item = init_tree(name);
 	a = &((*p)->child);
@@ -137,9 +137,9 @@ struct object_list **add_tree2list(unsigned char *name, struct object_list **p)
 	 
 } 
 
-struct object_list **add_blob2list(unsigned char *name, struct object_list **p)
+object_list_t **add_blob2list(uint8_t *name, object_list_t **p)
 {
-	struct object_list **a;
+	object_list_t **a;
 	*p = init_object_list();
 	(*p)->item = init_blob(name);
 	a= &((*p)->rbrother);
@@ -147,24 +147,24 @@ struct object_list **add_blob2list(unsigned char *name, struct object_list **p)
 	return a;
 }
 
-int store_blob(struct object *obj)
+int32_t store_blob(object_t *obj)
 {
 	if (0 != svt_sha1sum(obj->name, obj->oid.key))
 		fprintf(stderr, "svt_sha1sum in store_blob erro\n");
 	key2str(obj->oid.key, obj->oid.strkey);
 	
-	unsigned char store[400] = "\0";
+	uint8_t store[400] = "\0";
 	strcat(store, OBJECTSPATH);
 	strcat(store, obj->oid.strkey);
 	svt_cp(obj->name, store);
 	return 0;
 }
 
-int svt_cp(unsigned char *src, unsigned char *dest)
+int32_t svt_cp(uint8_t *src, uint8_t *dest)
 {
-	unsigned char block[4096];
-	int in, out;
-	int nread, nwrite;
+	uint8_t block[4096];
+	int32_t in, out;
+	int32_t nread, nwrite;
 	in = open(src, O_RDONLY);
 	out = open(dest, O_WRONLY|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR);
 	while ((nread = read(in, block, sizeof(block))) > 0)
@@ -174,15 +174,15 @@ int svt_cp(unsigned char *src, unsigned char *dest)
 	return 0;
 }
 
-int store_tree(struct object_list *tree)
+int32_t store_tree(object_list_t *tree)
 {
-	unsigned char path[400] = "\0";
-	unsigned char realpath[400] = "\0";
+	uint8_t path[400] = "\0";
+	uint8_t realpath[400] = "\0";
 	strcat(path, OBJECTSPATH);
 	strcat(path, "temp_treetohash");
-	struct object_list *u = tree->child;
-	int treefile;
-	unsigned int nname;
+	object_list_t *u = tree->child;
+	int32_t treefile;
+	uint32_t nname;
 	treefile = open(path, O_WRONLY|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR);
 	for(u = tree->child; u != NULL; u = u->rbrother) {
 		if (SHA1STRLEN != write(treefile, u->item->oid.strkey, SHA1STRLEN))
