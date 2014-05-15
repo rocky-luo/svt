@@ -28,6 +28,9 @@ int32_t parse_path(uint8_t *path)
 	creat_object_list(path, temp); 
 	return 0;
 }
+/*
+	**p指向了object_list_t上面即将添加的object的位置的指针，dir指向了即将添加的文件夹的名字
+*/
 
 object_list_t **creat_object_list(uint8_t *dir, object_list_t **p)
 {
@@ -173,7 +176,9 @@ int32_t svt_cp(uint8_t *src, uint8_t *dest)
 	close(out);	
 	return 0;
 }
-
+/*
+	tree object貌似是以文件路径作为hash关键字的
+*/
 int32_t store_tree(object_list_t *tree)
 {
 	uint8_t path[400] = "\0";
